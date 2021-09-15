@@ -10,7 +10,7 @@ namespace Grupo52.Api.Controllers
     [ApiController]
     public class EquiposController : ControllerBase
     {
-        List<Equipo> Equipos = new List<Equipo>();
+       
 
         SoccerContext _bd;
 
@@ -47,7 +47,7 @@ namespace Grupo52.Api.Controllers
                 _bd.SaveChanges();
                 return Ok(equipo);
             }
-            return BadRequest(Equipos);
+            return BadRequest(equipo);
         }
 
 
@@ -56,16 +56,28 @@ namespace Grupo52.Api.Controllers
         public IActionResult ModificarEquipo(int id ,Equipo equipo)
         {
 
-            var modificar = Equipos.Where(x => x.IdEquipo == id).FirstOrDefault();
-
-            if (modificar!= null)
+            if(ModelState.IsValid)
             {
-                modificar.Nombre = equipo.Nombre;
-                modificar.Ciudad = equipo.Ciudad;
-                modificar.Logotipo = equipo.Logotipo;
-                
+                var modficar = _bd.Equipos.Find(id);
+
+                if (modficar!=null)
+                {
+                    modficar.Nombre = equipo.Nombre;
+                    modficar.Ciudad = equipo.Ciudad;
+                    modficar.Logotipo = equipo.Logotipo;
+                    modficar.Capacidad = equipo.Capacidad;
+
+                    _bd.Update(modficar);
+                    _bd.SaveChanges();
+
+                    return Ok(modficar);
+                }
+
+                return NotFound("No se encontro el equipo");
             }
-            return Ok(modificar);
+
+            return BadRequest();
+
         }
 
 
@@ -74,11 +86,18 @@ namespace Grupo52.Api.Controllers
         public IActionResult BorrarEquipo (int id)
         {
 
-            var borrar = Equipos.Where(x => x.IdEquipo == id).FirstOrDefault();
+            var borrar = _bd.Equipos.Find(id);
+           
+            if (borrar!=null)
+            {
+                _bd.Remove(borrar);
+                _bd.SaveChanges();
+                return Ok(borrar);
+            }
+            return NotFound("No se encontro el equipo");
 
-            Equipos.Remove(borrar);
 
-            return Ok(Equipos);
+
         }
  
     }

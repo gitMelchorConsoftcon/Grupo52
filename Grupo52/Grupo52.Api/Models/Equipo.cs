@@ -10,11 +10,11 @@ namespace Grupo52.Api.Models
         public int IdEquipo { get; set; }
 
         [Column(name: "NombreEquipo")]
-        [Required]
-        [MaxLength(35)]
+        [Required(ErrorMessage ="El {0} es un campo requerido ")]
+        [MaxLength(35,ErrorMessage ="El campo {0} no puede contener mas de {1} caracteres")]
         public string Nombre { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El {0} es un campo requerido")]
         [MaxLength(200)]
         public string Logotipo { get; set; }
 
