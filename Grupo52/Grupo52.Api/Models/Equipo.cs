@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Grupo52.Api.Models
@@ -24,6 +25,15 @@ namespace Grupo52.Api.Models
         [Required]
         [Range(0,200000)]
         public int Capacidad { get; set; }
+
+
+        [MaxLength(60)]
+        public string NombreEstadio { get; set; }
+
+
+       
+        public virtual  List<Jugador>  Jugadores{ get; set; }
+
     }
 }
 

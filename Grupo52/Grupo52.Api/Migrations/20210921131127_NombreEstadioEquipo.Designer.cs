@@ -3,14 +3,16 @@ using Grupo52.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Grupo52.Api.Migrations
 {
     [DbContext(typeof(SoccerContext))]
-    partial class SoccerContextModelSnapshot : ModelSnapshot
+    [Migration("20210921131127_NombreEstadioEquipo")]
+    partial class NombreEstadioEquipo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,47 +52,6 @@ namespace Grupo52.Api.Migrations
                     b.HasKey("IdEquipo");
 
                     b.ToTable("Equipos");
-                });
-
-            modelBuilder.Entity("Grupo52.Api.Models.Jugador", b =>
-                {
-                    b.Property<int>("IdJugador")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("IdEquipo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(90)
-                        .HasColumnType("nvarchar(90)");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdJugador");
-
-                    b.HasIndex("IdEquipo");
-
-                    b.ToTable("Jugadores");
-                });
-
-            modelBuilder.Entity("Grupo52.Api.Models.Jugador", b =>
-                {
-                    b.HasOne("Grupo52.Api.Models.Equipo", "Equipo")
-                        .WithMany("Jugadores")
-                        .HasForeignKey("IdEquipo")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipo");
-                });
-
-            modelBuilder.Entity("Grupo52.Api.Models.Equipo", b =>
-                {
-                    b.Navigation("Jugadores");
                 });
 #pragma warning restore 612, 618
         }

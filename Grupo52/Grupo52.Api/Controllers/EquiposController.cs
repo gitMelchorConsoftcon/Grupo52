@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Grupo52.Api.Data;
 using Grupo52.Api.Models;
-using System.Collections.Generic;
-using System.Linq;
-using Grupo52.Api.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grupo52.Api.Controllers
 {
@@ -10,8 +8,7 @@ namespace Grupo52.Api.Controllers
     [ApiController]
     public class EquiposController : ControllerBase
     {
-       
-
+      
         SoccerContext _bd;
 
         public EquiposController(SoccerContext bd)
@@ -66,6 +63,7 @@ namespace Grupo52.Api.Controllers
                     modficar.Ciudad = equipo.Ciudad;
                     modficar.Logotipo = equipo.Logotipo;
                     modficar.Capacidad = equipo.Capacidad;
+                    modficar.NombreEstadio = equipo.NombreEstadio;
 
                     _bd.Update(modficar);
                     _bd.SaveChanges();
