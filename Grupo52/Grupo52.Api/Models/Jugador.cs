@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Grupo52.Api.DTOS;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Grupo52.Api.Models
@@ -21,9 +22,26 @@ namespace Grupo52.Api.Models
         [Required]
         public int IdEquipo { get; set; }
 
+        [Required]
+        public bool Activo { get; set; }
 
         [ForeignKey("IdEquipo")]
         public virtual Equipo Equipo { get; set; }
+
+
+
+        public Jugador()
+        {
+
+        }
+        public Jugador(JugadorNuevoDTO jugador )
+        {
+            IdJugador = 0;
+            Nombre = jugador.Nombre;
+            Numero = jugador.Numero;
+            IdEquipo = jugador.IdEquipo;
+            Activo = true;
+        }
 
     }
 }

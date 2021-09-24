@@ -24,7 +24,10 @@ namespace Grupo52.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JugadorDTO>>> GetJugadores()
         {
-            var jugadores = await _context.Jugadores.Include(x=> x.Equipo).ToListAsync();
+            var jugadores = await _context.Jugadores
+                                          .Include(x=> x.Equipo)
+                                          .Where(x=> x.Activo==true  )
+                                          .ToListAsync();
 
             var jugadoresDTO = new List<JugadorDTO>();
 
@@ -86,12 +89,16 @@ namespace Grupo52.Api.Controllers
         // POST: api/Jugadores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Jugador>> PostJugador(Jugador jugador)
+        public async Task<ActionResult<Jugador>> PostJugador(JugadorNuevoDTO jugador)
         {
-            _context.Jugadores.Add(jugador);
+            var obj = new Jugador(jugador);
+
+
+            _context.Jugadores.Add(obj);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetJugador", new { id = jugador.IdJugador }, jugador);
+            var resultado = await _context.Jugadores.Include(x => x.Equipo).Where(x=> x.IdJugador==obj.IdJugador).FirstOrDefaultAsync();
+            return CreatedAtAction("GetJugador", new { id = resultado.IdJugador }, new JugadorDTO( resultado));
         }
 
         // DELETE: api/Jugadores/5

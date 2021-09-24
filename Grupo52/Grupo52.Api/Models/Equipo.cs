@@ -30,8 +30,10 @@ namespace Grupo52.Api.Models
         [MaxLength(60)]
         public string NombreEstadio { get; set; }
 
+        [Required]
+        public bool Activo { get; set; }
 
-       
+
         public virtual  List<Jugador>  Jugadores{ get; set; }
 
     }
