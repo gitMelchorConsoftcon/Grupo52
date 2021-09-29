@@ -36,6 +36,9 @@ namespace Grupo52.Api.Models
 
         public virtual  List<Jugador>  Jugadores{ get; set; }
 
+        public virtual List<Partido> PartidoLocal { get; set; }
+        public virtual List<Partido> PartidoVisitante { get; set; }
+
     }
 }
 
