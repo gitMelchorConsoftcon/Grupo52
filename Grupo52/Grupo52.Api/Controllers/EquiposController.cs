@@ -1,4 +1,4 @@
-﻿using Grupo52.Api.Data;
+﻿using Grupo52.Api.Interfaces;
 using Grupo52.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +8,10 @@ namespace Grupo52.Api.Controllers
     [ApiController]
     public class EquiposController : ControllerBase
     {
-      
-        SoccerContext _bd;
 
-        public EquiposController(SoccerContext bd)
+        public IRepositorioGenerico<Equipo> _bd;
+
+        public EquiposController(IRepositorioGenerico<Equipo> bd)
         {
             _bd = bd;
         }
@@ -19,18 +19,20 @@ namespace Grupo52.Api.Controllers
 
         [HttpGet] // Sirve para obtener informacion del servidor
         public IActionResult Get()
-        {      
-            return Ok(_bd.Equipos);
+        {
+            return Ok(_bd.Listar());
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetEquipo(int id)
         {
-            var equipo = _bd.Equipos.Find(id);
+            Equipo equipo = _bd.Buscar(id);
 
             if (equipo == null)
+            {
                 return NotFound();
+            }
 
             return Ok(equipo);
         }
@@ -38,13 +40,8 @@ namespace Grupo52.Api.Controllers
         [HttpPost]  // sirve para guardar informacion
         public IActionResult GuardarEquipo (Equipo equipo)
         {
-            if (ModelState.IsValid)
-            {
-                _bd.Equipos.Add(equipo);
-                _bd.SaveChanges();
+                equipo = _bd.Guardar(equipo);
                 return Ok(equipo);
-            }
-            return BadRequest(equipo);
         }
 
 
@@ -52,30 +49,8 @@ namespace Grupo52.Api.Controllers
         [Route("{id}")]         
         public IActionResult ModificarEquipo(int id ,Equipo equipo)
         {
-
-            if(ModelState.IsValid)
-            {
-                var modficar = _bd.Equipos.Find(id);
-
-                if (modficar!=null)
-                {
-                    modficar.Nombre = equipo.Nombre;
-                    modficar.Ciudad = equipo.Ciudad;
-                    modficar.Logotipo = equipo.Logotipo;
-                    modficar.Capacidad = equipo.Capacidad;
-                    modficar.NombreEstadio = equipo.NombreEstadio;
-
-                    _bd.Update(modficar);
-                    _bd.SaveChanges();
-
-                    return Ok(modficar);
-                }
-
-                return NotFound("No se encontro el equipo");
-            }
-
-            return BadRequest();
-
+                equipo = _bd.Modificar(id, equipo);
+                return Ok(equipo);          
         }
 
 
@@ -84,18 +59,8 @@ namespace Grupo52.Api.Controllers
         public IActionResult BorrarEquipo (int id)
         {
 
-            var borrar = _bd.Equipos.Find(id);
-           
-            if (borrar!=null)
-            {
-                _bd.Remove(borrar);
-                _bd.SaveChanges();
-                return Ok(borrar);
-            }
-            return NotFound("No se encontro el equipo");
-
-
-
+            Equipo borrar =  _bd.Borrar(id);
+            return Ok(borrar);
         }
  
     }

@@ -1,4 +1,6 @@
 using Grupo52.Api.Data;
+using Grupo52.Api.Interfaces;
+using Grupo52.Api.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +26,8 @@ namespace Grupo52.Api
 
             services.AddDbContext<SoccerContext>(cfg => { cfg.UseSqlServer(Configuration.GetConnectionString("Soccer"));});
 
-           
+
+            services.AddTransient<IRepositorioGenerico<Equipo> , RepositorioGenerico<Equipo>>();
 
             services.AddControllers();
 
