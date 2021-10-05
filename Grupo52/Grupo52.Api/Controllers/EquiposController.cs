@@ -9,9 +9,9 @@ namespace Grupo52.Api.Controllers
     public class EquiposController : ControllerBase
     {
 
-        public IRepositorioGenerico<Equipo> _bd;
+        public ISoccerUOW _bd;
 
-        public EquiposController(IRepositorioGenerico<Equipo> bd)
+        public EquiposController(ISoccerUOW bd)
         {
             _bd = bd;
         }
@@ -20,14 +20,14 @@ namespace Grupo52.Api.Controllers
         [HttpGet] // Sirve para obtener informacion del servidor
         public IActionResult Get()
         {
-            return Ok(_bd.Listar());
+            return Ok(_bd.Equipos.Listar());
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetEquipo(int id)
         {
-            Equipo equipo = _bd.Buscar(id);
+            Equipo equipo = _bd.Equipos.Buscar(id);
 
             if (equipo == null)
             {
@@ -40,7 +40,7 @@ namespace Grupo52.Api.Controllers
         [HttpPost]  // sirve para guardar informacion
         public IActionResult GuardarEquipo (Equipo equipo)
         {
-                equipo = _bd.Guardar(equipo);
+                equipo = _bd.Equipos.Guardar(equipo);
                 return Ok(equipo);
         }
 
@@ -49,7 +49,7 @@ namespace Grupo52.Api.Controllers
         [Route("{id}")]         
         public IActionResult ModificarEquipo(int id ,Equipo equipo)
         {
-                equipo = _bd.Modificar(id, equipo);
+                equipo = _bd.Equipos.Modificar(id, equipo);
                 return Ok(equipo);          
         }
 
@@ -59,7 +59,7 @@ namespace Grupo52.Api.Controllers
         public IActionResult BorrarEquipo (int id)
         {
 
-            Equipo borrar =  _bd.Borrar(id);
+            Equipo borrar =  _bd.Equipos.Borrar(id);
             return Ok(borrar);
         }
  

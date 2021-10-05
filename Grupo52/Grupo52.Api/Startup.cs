@@ -27,7 +27,8 @@ namespace Grupo52.Api
             services.AddDbContext<SoccerContext>(cfg => { cfg.UseSqlServer(Configuration.GetConnectionString("Soccer"));});
 
 
-            services.AddTransient<IRepositorioGenerico<Equipo> , RepositorioGenerico<Equipo>>();
+            services.AddTransient<ISoccerUOW , SoccerUOW>();
+         
 
             services.AddControllers();
 
