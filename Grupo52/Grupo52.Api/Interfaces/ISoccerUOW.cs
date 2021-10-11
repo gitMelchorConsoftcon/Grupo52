@@ -7,5 +7,8 @@ namespace Grupo52.Api.Interfaces
         IRepositorioGenerico<Equipo> Equipos { get; }
         IRepositorioGenerico<Jugador> Jugadores { get; }
         IRepositorioGenerico<Partido> Partidos { get; }
+
+       IRepositorioUsuario Usuarios { get; }
+
     }
 }

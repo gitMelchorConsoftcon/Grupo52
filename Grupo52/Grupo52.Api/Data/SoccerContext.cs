@@ -20,5 +20,9 @@ namespace Grupo52.Api.Data
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Jugador> Jugadores { get; set; }
         public DbSet<Partido> Partidos { get; set; }
+
+        public DbSet<Usuario> Usuarios { get; set; }
+
+
     }
 }

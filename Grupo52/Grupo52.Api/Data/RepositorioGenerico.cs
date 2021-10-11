@@ -41,13 +41,13 @@ namespace Grupo52.Api.Data
 
         public T Modificar(int id , T obj)
         {
-            var modificar = Entidad.Find(id);
+            //var modificar = Entidad.Find(id);
 
-            modificar = obj;
+            //modificar = obj;
 
             _bd.Entry(obj).State = EntityState.Modified;
             _bd.SaveChanges();
-            return modificar;
+            return obj;
 
         }
 

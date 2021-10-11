@@ -24,6 +24,7 @@ namespace Grupo52.Api.Data
         private readonly IRepositorioGenerico<Partido> _Partidos;
         public IRepositorioGenerico<Partido> Partidos => _Partidos ?? new RepositorioGenerico<Partido>(Contexto);
 
-       
+        private readonly IRepositorioUsuario _Usuarios;
+        public IRepositorioUsuario Usuarios => _Usuarios ?? new RepositorioUsuario(Contexto);
     }
 }
