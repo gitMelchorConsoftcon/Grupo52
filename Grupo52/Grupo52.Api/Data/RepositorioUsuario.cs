@@ -84,8 +84,6 @@ namespace Grupo52.Api.Data
                 return $"{Iterations}.{salt}.{key}" ;
             }        
         }
-
-
         private bool Chek(string hash, string password)
         {
             string[] partes = hash.Split(".");
@@ -112,7 +110,16 @@ namespace Grupo52.Api.Data
 
         public Usuario Login(string usuario, string password)
         {
-            throw new NotImplementedException();
+            var usuarioObj = _bd.Usuarios.Where(x => x.UserName.ToLower() == usuario.ToLower()).FirstOrDefault();
+
+            if (usuarioObj!=null)
+            {
+                if (Chek (usuarioObj.Password,password))
+                {
+                    return usuarioObj;
+                }
+            }
+            return null;
         }
     }
 }

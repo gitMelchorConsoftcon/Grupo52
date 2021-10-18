@@ -2,7 +2,12 @@
 using Grupo52.Api.Interfaces;
 using Grupo52.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Grupo52.Api.Controllers
 {
@@ -11,10 +16,12 @@ namespace Grupo52.Api.Controllers
     public class UsuariosController : ControllerBase
     {
         public ISoccerUOW _bd;
+        private IConfiguration _config;
 
-        public UsuariosController(ISoccerUOW bd)
+        public UsuariosController(ISoccerUOW bd, IConfiguration config)
         {
             _bd = bd;
+            _config = config;
         }
 
 
@@ -68,6 +75,53 @@ namespace Grupo52.Api.Controllers
             Usuario borrar = _bd.Usuarios.Borrar(id);
             return Ok(new UsuarioDto( borrar));
         }
+
+
+        [HttpPost]
+        [Route("Login/")]
+        public IActionResult Login (UserLogin user)
+        {
+
+            var datos = _bd.Usuarios.Login(user.Usuario, user.Password);
+
+            if (datos == null)
+                return Unauthorized("Usuario o contraseña incorrecta...");
+
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,datos.IdUsuario.ToString() ),
+                new Claim(ClaimTypes.Name,datos.Nombre)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriopcion = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = System.DateTime.Now.AddDays(1),
+                SigningCredentials = credenciales
+            };
+
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriopcion);
+
+
+            return Ok(
+
+                new
+                {
+                    usuario = new UsuarioDto(datos),
+                    token = tokenHandler.WriteToken(token)
+                }
+
+                ) ;
+
+        }
+
+
 
     }
 }
