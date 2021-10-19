@@ -1,6 +1,7 @@
 ﻿using Grupo52.Api.Data;
 using Grupo52.Api.DTOS;
 using Grupo52.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Grupo52.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class JugadoresController : ControllerBase

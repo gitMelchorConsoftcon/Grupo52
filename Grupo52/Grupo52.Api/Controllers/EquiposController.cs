@@ -1,9 +1,12 @@
 ﻿using Grupo52.Api.Interfaces;
 using Grupo52.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grupo52.Api.Controllers
 {
+    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EquiposController : ControllerBase

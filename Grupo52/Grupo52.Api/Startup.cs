@@ -1,13 +1,16 @@
 using Grupo52.Api.Data;
 using Grupo52.Api.Interfaces;
-using Grupo52.Api.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Grupo52.Api
 {
@@ -27,6 +30,19 @@ namespace Grupo52.Api
             services.AddDbContext<SoccerContext>(cfg => { cfg.UseSqlServer(Configuration.GetConnectionString("Soccer"));});
 
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option=> {
+                option.TokenValidationParameters = new TokenValidationParameters
+
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer=false,
+                    ValidateAudience=false
+
+                };
+
+            });
+
             services.AddTransient<ISoccerUOW , SoccerUOW>();
          
 
@@ -38,12 +54,32 @@ namespace Grupo52.Api
                 {
                     Title = "Api grupo 5-1 (Futbol)",
                     Version = "v1",
-                    Description="Api para torneos de futbol",
+                    Description = "Api para torneos de futbol",
                 });
-                ;
+
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Auntenticacion JWT (Bearer)",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer"
+                });
+
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
+
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +100,7 @@ namespace Grupo52.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
